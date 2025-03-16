@@ -1,6 +1,6 @@
 import os
 import logging
-from datetime import datetime
+from datetime import datetime , timedelta
 
 # Default Log Directory
 DEFAULT_LOG_DIR = os.path.join(os.getcwd(),"logs")
@@ -61,3 +61,59 @@ def log_event(location: str, action: str, log_dir=None):
             log.info(f"Finished logging {action} at {location}")
     except Exception as e:
         log.error(f"Error logging {action} at {location}: {e}")
+
+
+# Function to calculate and append total time spent at a location
+def calculate_total_time(location: str, log_dir=None):
+    """
+    Calculates the total time spent at a given location based on timestamps in log files,
+    and appends the total duration to the same log file.
+
+    Parameters:
+        location (str): The location name (e.g., "Gym", "Work").
+        log_dir (str, optional): Custom log directory. Defaults to the script's log directory.
+
+    Returns:
+        total_time (timedelta): Total duration spent at the location.
+    """
+    
+    # Determine log directory
+    log_dir = log_dir if log_dir else os.path.join(os.getcwd(), "logs")
+    log_file = os.path.join(log_dir, f"{location}_Tracking.txt")
+
+    if not os.path.exists(log_file):
+        logging.warning(f"Log file not found: {log_file}")
+        return timedelta()  # Return zero time if no log file exists
+
+    arrival_times = []
+    departure_times = []
+
+    # Read log file and extract timestamps
+    with open(log_file, "r") as file:
+        for line in file:
+            parts = line.strip().split(": ", 1)  # Example: "Arrival at Gym: 2025-03-16 10:00:00"
+            if len(parts) == 2:
+                action, timestamp = parts
+                try:
+                    dt = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
+                    if "Arrival" in action:
+                        arrival_times.append(dt)
+                    elif "Departure" in action:
+                        departure_times.append(dt)
+                except ValueError:
+                    logging.error(f"Invalid timestamp format in log: {line}")
+
+    # Ensure we have equal pairs of arrivals & departures
+    total_time = timedelta()
+    for arrival, departure in zip(arrival_times, departure_times):
+        total_time += (departure - arrival)
+
+    # Log total time spent
+    total_time_str = str(total_time)
+    logging.info(f"Total time spent at {location}: {total_time_str}")
+
+    # Append total time to the log file
+    with open(log_file, "a") as file:
+        file.write(f"Total time spent at {location}: {total_time_str}\n")
+
+    return total_time
