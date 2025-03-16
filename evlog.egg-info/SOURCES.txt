@@ -1,0 +1,9 @@
+LICENSE
+README.md
+setup.py
+evlog/__init__.py
+evlog/logger.py
+evlog.egg-info/PKG-INFO
+evlog.egg-info/SOURCES.txt
+evlog.egg-info/dependency_links.txt
+evlog.egg-info/top_level.txt

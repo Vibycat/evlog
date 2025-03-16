@@ -10,7 +10,7 @@ Install `evlog` using pip:
 pip install evlog
 ```
 
-##  Usage
+## Usage
 
 ### ** Import & Log an Event**
 ```python
@@ -23,19 +23,27 @@ log_event("Gym", "Arrival")
 log_event("Work", "Departure")
 ```
 
-### **Where Are Logs Stored?**
+### ** Where Are Logs Stored?**
+By default, logs are stored in the `logs/` directory inside the current working directory (`cwd`).
+
 - **Global log file:** `logs/evlog.log` (tracks all events)
 - **Location-specific logs:**
   - `logs/Gym_Logs/Gym_Tracking.txt`
   - `logs/Work_Logs/Work_Tracking.txt`
 
-##  Features
-> Automatically creates log directories when needed  
-> Tracks multiple locations (Gym, Work, Home, etc.)  
-> Saves logs in structured directories  
-> Keeps a global log file for easy debugging  
+If a different directory is needed, you can specify a custom log directory:
+```python
+log_event("Gym", "Workout Started", log_dir="/custom/logs")
+```
 
-##  Project Setup (For Developers)
+## Features
+> Dynamically sets log directory based on the script's location
+> Allows custom log directories for different environments
+> Tracks multiple locations (Gym, Work, Home, etc.)
+> Saves logs in structured directories
+> Keeps a global log file for easy debugging
+
+## Project Setup (For Developers)
 To install this package locally for development:
 
 ```bash
@@ -44,10 +52,10 @@ cd evlog
 pip install .
 ```
 
-##  Contributing
+## Contributing
 Contributions are welcome! Feel free to fork the repo and submit a pull request.
 
-##  License
+## License
 This project is licensed under the **MIT License**.
 
 ---
