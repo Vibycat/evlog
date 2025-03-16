@@ -2,7 +2,7 @@
 
 **evlog** is a simple and lightweight Python package for logging and tracking events such as gym or work arrivals and departures. It automatically creates structured log files and keeps a global log for easy tracking.
 
-## 👥 Installation
+## Installation
 
 Install `evlog` using pip:
 
@@ -39,7 +39,7 @@ log_event("Work", "Departure")
 To install this package locally for development:
 
 ```bash
-git clone https://github.com/YOUR_GITHUB_USERNAME/evlog.git
+git clone https://github.com/Vibycat/evlog.git
 cd evlog
 pip install .
 ```
