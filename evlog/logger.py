@@ -113,6 +113,6 @@ def calculate_total_time(location: str, log_dir=None):
     logging.info(f"Total time logged at {location}: {total_time_str}")
 
     with open(log_file, "a") as file:
-        file.write(f"Total time spent at {location}: {total_time_str}\n")
+        file.write(f"Total time for {location}: {total_time_str}\n")
 
     return total_time
