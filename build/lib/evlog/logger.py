@@ -1,6 +1,6 @@
 import os
 import logging
-from datetime import datetime
+from datetime import datetime , timedelta
 
 # Default Log Directory
 DEFAULT_LOG_DIR = os.path.join(os.getcwd(),"logs")
@@ -56,8 +56,63 @@ def log_event(location: str, action: str, log_dir=None):
     # Append the log entry
     try:
         with open(log_file, "a") as file:
-            log.info(f"Logging {action} at {location} to {log_file}")
-            file.write(f"{action} at {location}: {current_time}\n")
-            log.info(f"Finished logging {action} at {location}")
+            log.info(f"Logging {action} to {location} at {log_file}")
+            file.write(f"{action} logged to {location}: {current_time}\n")
+            log.info(f"Sucessfully logged {action} to {location} at {log_file}")
     except Exception as e:
         log.error(f"Error logging {action} at {location}: {e}")
+
+
+# Function to calculate and append total time spent at a location
+def calculate_total_time(location: str, log_dir=None):
+    """
+    Calculates and appends the total time between matching log events at a location.
+
+    Parameters:
+        location (str): The location name (e.g., "Gym", "Work", "Door_Logs").
+        log_dir (str, optional): Custom log directory. Defaults to the script's log directory.
+
+    Returns:
+        total_time (timedelta): Total duration for the event type.
+    """
+
+    # Determine log directory
+    log_dir = log_dir if log_dir else os.path.join(os.getcwd(), "logs")
+    log_file = os.path.join(log_dir, f"{location}_Tracking.txt")
+
+    if not os.path.exists(log_file):
+        logging.warning(f"Log file not found: {log_file}")
+        return None  # Return nothing if error
+
+    event_times = []
+    
+    # Read log file and extract timestamps
+    with open(log_file, "r") as file:
+        for line in file:
+            parts = line.strip().split(": ", 1)  # Extract action & timestamp
+            if len(parts) == 2:
+                action, timestamp = parts
+                try:
+                    dt = datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
+                    event_times.append(dt)
+                except ValueError:
+                    logging.error(f"Invalid timestamp format in log: {line}")
+
+    # Ensure we have an even number of events (pairs)
+    if len(event_times) % 2 != 0:
+        logging.warning(f"Uneven log entries for {location}, ignoring last entry.")
+        event_times = event_times[:-1]  # Ignore the last unpaired entry
+
+    # Calculate total time
+    total_time = timedelta()
+    for start, end in zip(event_times[0::2], event_times[1::2]):  # Pairing events
+        total_time += (end - start)
+
+    # Log and append total time
+    total_time_str = str(total_time)
+    logging.info(f"Total time logged at {location}: {total_time_str}")
+
+    with open(log_file, "a") as file:
+        file.write(f"Total time for {location}: {total_time_str}\n")
+
+    return total_time
