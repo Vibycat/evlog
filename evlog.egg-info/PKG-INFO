@@ -1,6 +1,6 @@
 Metadata-Version: 2.2
 Name: evlog
-Version: 0.0.2
+Version: 0.0.1
 Summary: A lightweight Python package for event logging and tracking.
 Home-page: https://github.com/Vibycat/evlog
 Author: Kyle May
