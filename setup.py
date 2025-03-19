@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="evlog",
-    version="0.0.1",
+    version="0.0.2",
     description="A lightweight Python package for event logging and tracking.",
     author="Kyle May",
     author_email="",
