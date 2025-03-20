@@ -98,6 +98,23 @@ Latest Total Time at Gym: {'location': 'Gym', 'total_time': '2:30:00', 'timestam
 
 ---
 
+## **Merging Logs from Multiple Locations**
+You can merge logs from different locations into a single log file.
+
+### **Merge Logs**
+```python
+from evlog import merge_logs
+
+merged_log_file = merge_logs(["Gym", "Work"], output_format="json", log_dir="logs")
+print(f"Merged logs saved to: {merged_log_file}")
+```
+#### Example Output:
+```
+Merged logs saved to: logs/Merged_Logs.json
+```
+
+---
+
 ## **Supported File Formats**
 `evlog` supports three different logging formats:
 - **TXT** (`file_format="txt"`)
@@ -151,6 +168,7 @@ Gym,Total Time,2:30:00
 ✅ Keeps a global log file for easy debugging  
 ✅ Calculates and appends **total time spent** at locations  
 ✅ Extracts latest events dynamically using `extract_event()`  
+✅ Merges logs from multiple locations using `merge_logs()`  
 
 ---
 

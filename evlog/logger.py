@@ -309,3 +309,84 @@ def extract_event(location: str, event_type: str, action_filter: str = None, log
     except json.JSONDecodeError:
         log.error(f"Error decoding JSON in {log_file}")
         return None
+
+# Erase old log files 
+def cleanup_old_logs(days=30, log_dir=DEFAULT_LOG_DIR):
+    """
+    Deletes log files older than the specified number of days.
+    
+    Parameters:
+        days (int): Number of days to retain logs.
+        log_dir (str): Directory where log files are stored.
+    """
+    threshold_date = datetime.now() - timedelta(days=days)
+
+    for file_name in os.listdir(log_dir):
+        file_path = os.path.join(log_dir, file_name)
+        if os.path.isfile(file_path):
+            file_modified_time = datetime.fromtimestamp(os.path.getmtime(file_path))
+            if file_modified_time < threshold_date:
+                try:
+                    os.remove(file_path)
+                    log.info(f"Deleted old log file: {file_path}")
+                except Exception as e:
+                    log.error(f"Error deleting log file {file_path}: {e}")
+
+# create a summary report 
+def generate_summary_report(log_dir=DEFAULT_LOG_DIR, file_format="json"):
+    """
+    Generates a summary report of total time spent at different locations.
+    
+    Parameters:
+        log_dir (str): Directory where log files are stored.
+        file_format (str): Format of the log files to process (txt, csv, json).
+    
+    Returns:
+        dict: A dictionary with location names and total time spent.
+    """
+    summary = {}
+
+    for file_name in os.listdir(log_dir):
+        if file_name.endswith(f"_Tracking.{file_format}"):
+            location = file_name.replace(f"_Tracking.{file_format}", "")
+            total_time = calculate_total_time(location, file_format, log_dir)
+            if total_time:
+                summary[location] = str(total_time)
+
+    log.info(f"Generated summary report: {summary}")
+    return summary
+
+# Merge Log files ( example, merge work location and time punches files )
+def merge_logs(locations: list, output_format="json", log_dir=DEFAULT_LOG_DIR):
+    """
+    Merges logs from multiple locations into a single file.
+
+    Parameters:
+        locations (list): List of locations whose logs need merging.
+        output_format (str): Output file format (txt, csv, json).
+        log_dir (str): Directory where log files are stored.
+    
+    Returns:
+        str: Path to the merged log file.
+    """
+    merged_data = []
+    output_file = os.path.join(log_dir, f"Merged_Logs.{output_format}")
+
+    for location in locations:
+        log_file = os.path.join(log_dir, f"{location}_Tracking.{output_format}")
+
+        if not os.path.exists(log_file):
+            log.warning(f"Log file not found: {log_file}")
+            continue
+
+        if output_format == "json":
+            with open(log_file, "r") as file:
+                data = json.load(file)
+                merged_data.extend(data)
+
+    if output_format == "json":
+        with open(output_file, "w") as file:
+            json.dump(merged_data, file, indent=4)
+
+    log.info(f"Merged logs saved to: {output_file}")
+    return output_file
