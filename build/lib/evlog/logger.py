@@ -259,3 +259,53 @@ def calculate_time(event_times, location, log_file):
 
     return total_time
 
+# Extract acttion events from log files
+def extract_event(location: str, event_type: str, action_filter: str = None, log_dir=DEFAULT_LOG_DIR):
+    """
+    Extracts the latest event of a specific type from a JSON log file.
+    
+    Parameters:
+        location (str): The location to track (e.g., "gym", "work").
+        event_type (str): The event type to extract (e.g., "action", "total_time").
+        action_filter (str, optional): The specific action to filter (e.g., "arrival", "departure").
+        log_dir (str): The directory where log files are stored (default: "logs").
+
+    Returns:
+        dict or None: A dictionary with extracted event data or None if no matching event is found.
+    """
+    log_file = os.path.join(log_dir, f"{location}_Tracking.json")
+
+    if not os.path.exists(log_file):
+        log.warning(f"JSON log file not found: {log_file}")
+        return None
+
+    try:
+        with open(log_file, "r") as file:
+            data = json.load(file)
+
+            if not data:
+                log.warning(f"No data found in JSON log: {log_file}")
+                return None
+
+            # Filter only entries that contain the requested event type
+            filtered_entries = [entry for entry in data if event_type in entry]
+
+            # If action_filter is specified, filter only matching actions
+            if action_filter and event_type == "action":
+                filtered_entries = [entry for entry in filtered_entries if entry.get("action") == action_filter]
+
+            if not filtered_entries:
+                log.warning(f"No valid '{event_type}' entries found in {log_file} with filter: {action_filter}")
+                return None
+
+            latest_entry = filtered_entries[-1]  # Get the latest valid event
+
+            return {
+                "location": latest_entry["location"],
+                event_type: latest_entry[event_type],
+                "timestamp": latest_entry["timestamp"]
+            }
+
+    except json.JSONDecodeError:
+        log.error(f"Error decoding JSON in {log_file}")
+        return None

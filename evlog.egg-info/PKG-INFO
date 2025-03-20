@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: evlog
-Version: 0.0.2
+Version: 0.0.3
 Summary: A lightweight Python package for event logging and tracking.
 Home-page: https://github.com/Vibycat/evlog
 Author: Kyle May
@@ -13,5 +13,6 @@ License-File: LICENSE
 Dynamic: author
 Dynamic: classifier
 Dynamic: home-page
+Dynamic: license-file
 Dynamic: requires-python
 Dynamic: summary
