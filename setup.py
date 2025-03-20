@@ -2,10 +2,10 @@ from setuptools import setup, find_packages
 
 setup(
     name="evlog",
-    version="0.0.3",
+    version="0.0.4",
     description="A lightweight Python package for event logging and tracking.",
     author="Vibycat",
-    updated="04/19/2025",
+    updated="04/20/2025",
     author_email="",
     url="https://github.com/Vibycat/evlog",  
     packages=find_packages(),
