@@ -259,7 +259,7 @@ def calculate_time(event_times, location, log_file):
 
     return total_time
 
-# Extract acttion events from log files
+# Extract action events from log files
 def extract_event(location: str, event_type: str, action_filter: str = None, log_dir=DEFAULT_LOG_DIR):
     """
     Extracts the latest event of a specific type from a JSON log file.

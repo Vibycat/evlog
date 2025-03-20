@@ -1,10 +1,9 @@
 Metadata-Version: 2.4
 Name: evlog
-Version: 0.0.2
+Version: 0.0.3
 Summary: A lightweight Python package for event logging and tracking.
 Home-page: https://github.com/Vibycat/evlog
 Author: Vibycat
-Updated: 04/19/2025
 Author-email: 
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
